@@ -50,7 +50,7 @@ class FlashcardService
             'HTTP-Referer' => config('app.url'),
             'X-Title' => 'Flashcard Generator',
         ])->post('https://openrouter.ai/api/v1/chat/completions', [
-            'model' => config('services.openrouter.model', 'deepseek/deepseek-v3.2'),
+            'model' => config('services.openrouter.model', 'openrouter/free'),
             'messages' => [
                 [
                     'role' => 'system',

@@ -37,7 +37,7 @@ return [
 
     'openrouter' => [
         'api_key' => env('OPENROUTER_API_KEY'),
-        'model' => env('OPENROUTER_MODEL', 'deepseek/deepseek-v3.2'),
+        'model' => env('OPENROUTER_MODEL', 'openrouter/free'),
         // can quickly switch because openrouter is goated
     ],
 
