@@ -1,40 +1,40 @@
 @extends("admin.layout")
 
 @section("content")
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Admin Dashboard</h2>
+    <h2 class="text-2xl font-medium text-black dark:text-white mb-6">Admin Dashboard</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Total Users</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $stats["total_users"] }}</p>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
+            <p class="text-3xl font-medium text-black dark:text-white">{{ $stats["total_users"] }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Total Sets</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $stats["total_sets"] }}</p>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Total Sets</p>
+            <p class="text-3xl font-medium text-black dark:text-white">{{ $stats["total_sets"] }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Total Flashcards</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $stats["total_flashcards"] }}</p>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Total Flashcards</p>
+            <p class="text-3xl font-medium text-black dark:text-white">{{ $stats["total_flashcards"] }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <p class="text-sm text-gray-600 dark:text-gray-400">Generations</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ $stats["total_generations"] }}</p>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <p class="text-sm text-gray-500 dark:text-gray-400">Generations</p>
+            <p class="text-3xl font-medium text-black dark:text-white">{{ $stats["total_generations"] }}</p>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Activity Chart</h3>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <h3 class="text-lg font-medium text-black dark:text-white mb-4">Activity Chart</h3>
             <canvas id="activityChart" height="200"></canvas>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
+        <div class="bg-white dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-800">
+            <h3 class="text-lg font-medium text-black dark:text-white mb-4">Recent Activity</h3>
             <div class="space-y-3 max-h-80 overflow-y-auto">
                 @forelse($recentActivity as $activity)
-                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800">
                         <div>
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">
+                            <p class="text-sm font-medium text-black dark:text-white">
                                 {{ $activity->user->name ?? "Guest" }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
@@ -73,16 +73,16 @@
                     {
                         label: "Generations",
                         data: generateData,
-                        borderColor: "#3b82f6",
-                        backgroundColor: "rgba(59, 130, 246, 0.1)",
+                        borderColor: "#0000FF",
+                        backgroundColor: "rgba(12, 0, 128, 0.5)",
                         tension: 0.4,
                         fill: true
                     },
                     {
                         label: "Saved Sets",
                         data: saveData,
-                        borderColor: "#10b981",
-                        backgroundColor: "rgba(16, 185, 129, 0.1)",
+                        borderColor: "#6b7280",
+                        backgroundColor: "rgba(107, 114, 128, 0.1)",
                         tension: 0.4,
                         fill: true
                     }
