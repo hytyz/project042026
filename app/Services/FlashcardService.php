@@ -41,8 +41,8 @@ class FlashcardService
     private function generateWithAI(string $content, string $type): array
     {
         $prompt = $type === 'topic'
-            ? "Generate 10 educational flashcards about the topic: \"{$content}\". Each flashcard should have a question and a concise answer. Return ONLY a JSON array in this exact format: [{\"question\": \"...\", \"answer\": \"...\"}, ...]"
-            : "Generate 10 educational flashcards from these lecture notes. Each flashcard should have a question and a concise answer. Return ONLY a JSON array in this exact format: [{\"question\": \"...\", \"answer\": \"...\"}, ...]\n\nLecture Notes:\n{$content}";
+            ? "Generate 5-10 educational flashcards about the topic: \"{$content}\". Each flashcard should have a question and a concise answer (3-4 words). Return ONLY a JSON array in this exact format: [{\"question\": \"...\", \"answer\": \"...\"}, ...]"
+            : "Generate 5-10 educational flashcards from these lecture notes. Each flashcard should have a question and a concise answer. Return ONLY a JSON array in this exact format: [{\"question\": \"...\", \"answer\": \"...\"}, ...]\n\nLecture Notes:\n{$content}";
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.config('services.openrouter.api_key'),
