@@ -79,3 +79,21 @@ jobs:
           app-name: 'polinotes'
           slot-name: 'Production'
           package: .
+      
+      - name: Configure Azure App Service
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'polinotes'
+          app-settings-json: |
+            [
+              {
+                "name": "APP_URL",
+                "value": "https://polinotes.azurewebsites.net",
+                "slotSetting": false
+              },
+              {
+                "name": "FORCE_SCHEME",
+                "value": "https",
+                "slotSetting": false
+              }
+            ]
