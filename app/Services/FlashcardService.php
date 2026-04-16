@@ -146,15 +146,63 @@ class FlashcardService
     }
 
     /**
-     * Generate flashcards from lecture notes (simple parsing)
+     * Generate flashcards from lecture notes (improved parsing)
      */
     private function generateNotesFlashcards(string $notes): array
     {
         $flashcards = [];
 
-        // Split by lines and look for key patterns
+        // First, try to extract lines with key:value patterns
         $lines = explode("\n", $notes);
-        $count = 0;
+        $keyValueCards = $this->extractKeyValueCards($lines);
+        
+        if (count($keyValueCards) >= 5) {
+            return $keyValueCards;
+        }
+
+        // If not enough key-value cards, try to extract from bullet points or paragraphs
+        $paragraphs = preg_split('/\n\s*\n/', trim($notes));
+        
+        foreach ($paragraphs as $paragraph) {
+            if (empty(trim($paragraph))) {
+                continue;
+            }
+
+            // Try to extract bullet points
+            $bulletPoints = $this->extractBulletPoints($paragraph);
+            if (! empty($bulletPoints)) {
+                foreach ($bulletPoints as $point) {
+                    if (count($flashcards) < 8) {
+                        $flashcards[] = [
+                            'question' => $this->generateQuestionFromStatement($point),
+                            'answer' => $point,
+                        ];
+                    }
+                }
+                continue;
+            }
+
+            // Otherwise, use sentences from the paragraph
+            $sentences = $this->extractSentences($paragraph);
+            foreach ($sentences as $sentence) {
+                if (count($flashcards) < 8) {
+                    $flashcards[] = [
+                        'question' => $this->generateQuestionFromStatement($sentence),
+                        'answer' => $sentence,
+                    ];
+                }
+            }
+        }
+
+        return ! empty($flashcards) ? $flashcards : $this->createGenericCards($notes);
+    }
+
+    /**
+     * Extract flashcards from key:value patterns
+     */
+    private function extractKeyValueCards(array $lines): array
+    {
+        $flashcards = [];
 
         foreach ($lines as $line) {
             $line = trim($line);
@@ -164,7 +212,7 @@ class FlashcardService
 
             // Look for lines that look like definitions or key points
             if (preg_match('/^(.*?)[=:–-](.*)$/u', $line, $matches)) {
-                $question = trim($matches[1]).'?';
+                $question = trim($matches[1]);
                 $answer = trim($matches[2]);
 
                 // Clean up the question
@@ -177,34 +225,113 @@ class FlashcardService
                     'question' => $question,
                     'answer' => $answer,
                 ];
-                $count++;
             }
 
             // Limit to reasonable number
-            if ($count >= 8) {
+            if (count($flashcards) >= 8) {
                 break;
             }
         }
 
-        // If no structured content found, create generic cards
-        if (empty($flashcards)) {
-            $flashcards = [
-                [
-                    'question' => 'What is the main topic of these notes?',
-                    'answer' => substr($notes, 0, 200).(strlen($notes) > 200 ? '...' : ''),
-                ],
-                [
-                    'question' => 'What are the key points to remember?',
-                    'answer' => 'The notes cover important concepts that should be reviewed regularly for better understanding and retention.',
-                ],
-                [
-                    'question' => 'How should you study this material?',
-                    'answer' => 'Review the notes multiple times, create your own questions, and test yourself regularly to reinforce learning.',
-                ],
-            ];
+        return $flashcards;
+    }
+
+    /**
+     * Extract bullet points from text
+     */
+    private function extractBulletPoints(string $text): array
+    {
+        $points = [];
+        
+        // Match lines starting with -, *, •, or numbers followed by dot/paren
+        if (preg_match_all('/^[\s]*([-*•]|\d+\.|\d+\))\s+(.+)$/m', $text, $matches)) {
+            foreach ($matches[2] as $point) {
+                $point = trim($point);
+                if (! empty($point) && strlen($point) > 5) {
+                    $points[] = $point;
+                }
+            }
         }
 
-        return $flashcards;
+        return $points;
+    }
+
+    /**
+     * Extract sentences from a paragraph
+     */
+    private function extractSentences(string $paragraph): array
+    {
+        $sentences = [];
+        
+        // Split by sentence endings
+        $parts = preg_split('/(?<=[.!?])\s+/', trim($paragraph));
+        
+        foreach ($parts as $sentence) {
+            $sentence = trim($sentence);
+            // Only use sentences that are reasonably long and complete
+            if (strlen($sentence) > 15 && strlen($sentence) < 300) {
+                // Remove trailing punctuation for cleaner answers
+                $sentence = rtrim($sentence, '.!?');
+                $sentences[] = $sentence;
+            }
+        }
+
+        return array_slice($sentences, 0, 3); // Limit to 3 sentences per paragraph
+    }
+
+    /**
+     * Generate a question from a statement
+     */
+    private function generateQuestionFromStatement(string $statement): string
+    {
+        $statement = trim($statement);
+        
+        // If it's already a question, return it as-is
+        if (str_ends_with($statement, '?')) {
+            return $statement;
+        }
+
+        // Try to extract key terms and create a question
+        // Remove common words and keep focus words
+        $words = str_word_count($statement, 1, '0-9-');
+        
+        if (count($words) > 0) {
+            // Find the main subject/verb structure
+            $firstWords = array_slice($words, 0, min(3, count($words)));
+            $mainPhrase = implode(' ', $firstWords);
+            
+            // Create a "What" or "How" question based on context
+            if (preg_match('/^(is|are|was|were|be|being|been)/i', $statement)) {
+                return 'What '.$statement.'?';
+            } elseif (preg_match('/^(can|could|may|might|should|would|must|will)/i', $statement)) {
+                return ucfirst($statement).'?';
+            } else {
+                return 'What about '.$mainPhrase.'?';
+            }
+        }
+
+        return 'What is this about?';
+    }
+
+    /**
+     * Create generic fallback cards
+     */
+    private function createGenericCards(string $notes): array
+    {
+        return [
+            [
+                'question' => 'What is the main topic of these notes?',
+                'answer' => substr($notes, 0, 200).(strlen($notes) > 200 ? '...' : ''),
+            ],
+            [
+                'question' => 'What are the key points to remember?',
+                'answer' => 'The notes cover important concepts that should be reviewed regularly for better understanding and retention.',
+            ],
+            [
+                'question' => 'How should you study this material?',
+                'answer' => 'Review the notes multiple times, create your own questions, and test yourself regularly to reinforce learning.',
+            ],
+        ];
     }
 
     /**
