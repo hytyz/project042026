@@ -95,5 +95,15 @@ jobs:
                 "name": "FORCE_SCHEME",
                 "value": "https",
                 "slotSetting": false
+              },
+              {
+                "name": "SESSION_DRIVER",
+                "value": "database",
+                "slotSetting": false
+              },
+              {
+                "name": "SESSION_SECURE_COOKIE",
+                "value": "true",
+                "slotSetting": false
               }
             ]
