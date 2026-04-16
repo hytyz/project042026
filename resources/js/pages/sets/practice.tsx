@@ -35,6 +35,7 @@ export default function SetPractice({ id }: { id: string }) {
 
     const fetchSet = () => {
         fetch(`/api/sets/${id}`, {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())

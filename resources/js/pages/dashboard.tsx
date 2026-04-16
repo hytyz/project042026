@@ -42,6 +42,7 @@ export default function Dashboard() {
 
         fetch('/api/flashcards/generate', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',

@@ -40,6 +40,7 @@ export default function FlashcardReview() {
         }
 
         fetch('/api/tags', {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())
@@ -86,6 +87,7 @@ export default function FlashcardReview() {
 
         fetch('/api/tags', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
@@ -114,6 +116,7 @@ export default function FlashcardReview() {
         try {
             const response = await fetch('/api/sets', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',

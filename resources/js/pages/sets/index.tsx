@@ -40,6 +40,7 @@ export default function SetsIndex() {
 
     const fetchSets = () => {
         fetch('/api/sets', {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())
@@ -53,6 +54,7 @@ export default function SetsIndex() {
 
     const fetchTags = () => {
         fetch('/api/tags', {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())
@@ -68,6 +70,7 @@ export default function SetsIndex() {
 
         fetch(`/api/sets/${id}`, {
             method: 'DELETE',
+            credentials: 'include',
             headers: {
                 Accept: 'application/json',
                 'X-CSRF-TOKEN':

@@ -47,6 +47,7 @@ export default function SetShow({ id }: { id: string }) {
 
     const fetchSet = () => {
         fetch(`/api/sets/${id}`, {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())
@@ -66,6 +67,7 @@ export default function SetShow({ id }: { id: string }) {
 
     const fetchTags = () => {
         fetch('/api/tags', {
+            credentials: 'include',
             headers: { Accept: 'application/json' },
         })
             .then((res) => res.json())
@@ -143,6 +145,7 @@ export default function SetShow({ id }: { id: string }) {
         try {
             const response = await fetch(`/api/sets/${id}`, {
                 method: 'PUT',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
