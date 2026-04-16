@@ -45,7 +45,7 @@ class SecurityController extends Controller implements HasMiddleware
     }
 
     /**
-     * Update the user's password.
+     * update the user password
      */
     public function update(PasswordUpdateRequest $request): RedirectResponse
     {

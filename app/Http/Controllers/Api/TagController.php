@@ -54,7 +54,7 @@ class TagController extends Controller
     }
 
     /**
-     * Update a tag
+     * update a tag
      */
     public function update(Request $request, Tag $tag): JsonResponse
     {
@@ -85,7 +85,7 @@ class TagController extends Controller
     }
 
     /**
-     * Delete a tag
+     * delete a tag
      */
     public function destroy(Tag $tag): JsonResponse
     {

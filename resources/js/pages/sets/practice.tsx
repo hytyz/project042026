@@ -205,7 +205,7 @@ export default function SetPractice({ id }: { id: string }) {
         <>
             <Head title={`Practice: ${setData.title}`} />
             <div className="flex h-full flex-1 flex-col items-center gap-6 p-6">
-                {/* Header */}
+                {/* header */}
                 <div className="flex w-full max-w-2xl items-center justify-between">
                     <Button
                         variant="ghost"
@@ -236,12 +236,12 @@ export default function SetPractice({ id }: { id: string }) {
                     </div>
                 </div>
 
-                {/* Progress */}
+                {/* progress */}
                 <div className="w-full max-w-2xl">
                     <Progress value={progress} className="h-2" />
                 </div>
 
-                {/* Flashcard */}
+                {/* flashcard */}
       <Card
     onClick={handleFlip}
     className={`w-full max-w-2xl cursor-pointer select-none
@@ -258,7 +258,7 @@ export default function SetPractice({ id }: { id: string }) {
             ${isFlipped ? 'rotate-y-180' : ''}
         `}
     >
-        {/* FRONT — Question */}
+        {/* front - question */}
         <div className="absolute inset-0 backface-hidden flex items-center justify-center">
            {isFlipped ? "" : ( <CardContent className="flex flex-col items-center justify-center gap-4 px-8 py-12 text-center">
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
@@ -276,7 +276,7 @@ export default function SetPractice({ id }: { id: string }) {
             </CardContent> )}
         </div>
 
-        {/* BACK — Answer */}
+        {/* back - answer */}
         { !isFlipped ? "" : (<div className="absolute inset-0 backface-hidden rotate-y-180 flex items-center justify-center">
             <CardContent className="flex flex-col items-center justify-center gap-4 px-8 py-12 text-center">
                 <div className="text-sm text-muted-foreground flex items-center gap-2">
@@ -296,7 +296,7 @@ export default function SetPractice({ id }: { id: string }) {
     </div>
 </Card>
 
-                {/* Rating Buttons */}
+                {/* rating buttons */}
                 <div className="flex gap-3">
                     <Button
                         variant="outline"
@@ -316,7 +316,7 @@ export default function SetPractice({ id }: { id: string }) {
                     </Button>
                 </div>
 
-                {/* Score Summary */}
+                {/* score summary */}
                 <div className="flex gap-6 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                         <Check className="h-4 w-4 text-green-500" />

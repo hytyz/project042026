@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Log;
 class FlashcardService
 {
     /**
-     * Generate flashcards using AI (OpenRouter) or simulation for testing
+     * generate flashcards using ai or simulation
      *
-     * @param  string  $content  The lecture notes or topic
-     * @param  string  $type  Either 'notes' or 'topic'
-     * @return array Array of flashcards with question and answer
+     * @param  string  $content  lecture notes or topic
+     * @param  string  $type  'notes' or 'topic'
+     * @return array flashcards with question and answer
      */
     public function generateFlashcards(string $content, string $type = 'notes'): array
     {
@@ -36,7 +36,7 @@ class FlashcardService
     }
 
     /**
-     * Generate flashcards using OpenRouter API
+     * generate flashcards using openrouter api
      */
     private function generateWithAI(string $content, string $type): array
     {
@@ -72,7 +72,7 @@ class FlashcardService
         $result = $response->json();
         $content = $result['choices'][0]['message']['content'] ?? '';
 
-        // Extract JSON from response (handle markdown code blocks)
+        // extract json from markdown code blocks
         $content = $this->extractJsonFromResponse($content);
 
         $flashcards = json_decode($content, true);
@@ -85,16 +85,16 @@ class FlashcardService
     }
 
     /**
-     * Extract JSON from AI response (handles markdown code blocks)
+     * extract json from ai response (handles markdown code blocks)
      */
     private function extractJsonFromResponse(string $content): string
     {
-        // Try to extract JSON from markdown code blocks
+        // extract json from markdown code blocks
         if (preg_match('/```(?:json)?\s*([\s\S]*?)```/', $content, $matches)) {
             return trim($matches[1]);
         }
 
-        // Try to find JSON array
+        // find json array
         if (preg_match('/\[[\s\S]*\]/', $content, $matches)) {
             return $matches[0];
         }
@@ -103,7 +103,7 @@ class FlashcardService
     }
 
     /**
-     * Simulate flashcard generation (fallback when no API key)
+     * simulate flashcard generation (fallback without api key)
      */
     private function simulateGeneration(string $content, string $type): array
     {
@@ -115,7 +115,7 @@ class FlashcardService
     }
 
     /**
-     * Generate flashcards for a topic
+     * generate flashcards for a topic
      */
     private function generateTopicFlashcards(string $topic): array
     {
@@ -146,13 +146,13 @@ class FlashcardService
     }
 
     /**
-     * Generate flashcards from lecture notes (improved parsing)
+     * generate flashcards from lecture notes
      */
     private function generateNotesFlashcards(string $notes): array
     {
         $flashcards = [];
 
-        // First, try to extract lines with key:value patterns
+        // extract key:value patterns
         $lines = explode("\n", $notes);
         $keyValueCards = $this->extractKeyValueCards($lines);
         
@@ -160,7 +160,7 @@ class FlashcardService
             return $keyValueCards;
         }
 
-        // If not enough key-value cards, try to extract from bullet points or paragraphs
+        // extract from bullet points/paragraphs if needed
         $paragraphs = preg_split('/\n\s*\n/', trim($notes));
         
         foreach ($paragraphs as $paragraph) {
@@ -168,7 +168,7 @@ class FlashcardService
                 continue;
             }
 
-            // Try to extract bullet points
+            // extract bullet points
             $bulletPoints = $this->extractBulletPoints($paragraph);
             if (! empty($bulletPoints)) {
                 foreach ($bulletPoints as $point) {
@@ -182,7 +182,7 @@ class FlashcardService
                 continue;
             }
 
-            // Otherwise, use sentences from the paragraph
+            // use paragraph sentences
             $sentences = $this->extractSentences($paragraph);
             foreach ($sentences as $sentence) {
                 if (count($flashcards) < 8) {
@@ -198,7 +198,7 @@ class FlashcardService
     }
 
     /**
-     * Extract flashcards from key:value patterns
+     * extract flashcards from key:value patterns
      */
     private function extractKeyValueCards(array $lines): array
     {
@@ -210,12 +210,12 @@ class FlashcardService
                 continue;
             }
 
-            // Look for lines that look like definitions or key points
+            // find definition/key point lines
             if (preg_match('/^(.*?)[=:–-](.*)$/u', $line, $matches)) {
                 $question = trim($matches[1]);
                 $answer = trim($matches[2]);
 
-                // Clean up the question
+                // clean up question
                 $question = ucfirst(preg_replace('/[:=]/', '', $question));
                 if (! str_ends_with($question, '?')) {
                     $question .= '?';
@@ -227,7 +227,7 @@ class FlashcardService
                 ];
             }
 
-            // Limit to reasonable number
+            // limit to reasonable number
             if (count($flashcards) >= 8) {
                 break;
             }
@@ -237,13 +237,13 @@ class FlashcardService
     }
 
     /**
-     * Extract bullet points from text
+     * extract bullet points from text
      */
     private function extractBulletPoints(string $text): array
     {
         $points = [];
         
-        // Match lines starting with -, *, •, or numbers followed by dot/paren
+        // match bullet point lines
         if (preg_match_all('/^[\s]*([-*•]|\d+\.|\d+\))\s+(.+)$/m', $text, $matches)) {
             foreach ($matches[2] as $point) {
                 $point = trim($point);
@@ -257,50 +257,50 @@ class FlashcardService
     }
 
     /**
-     * Extract sentences from a paragraph
+     * extract sentences from a paragraph
      */
     private function extractSentences(string $paragraph): array
     {
         $sentences = [];
         
-        // Split by sentence endings
+        // split by sentence endings
         $parts = preg_split('/(?<=[.!?])\s+/', trim($paragraph));
         
         foreach ($parts as $sentence) {
             $sentence = trim($sentence);
-            // Only use sentences that are reasonably long and complete
+            // use reasonably long complete sentences
             if (strlen($sentence) > 15 && strlen($sentence) < 300) {
-                // Remove trailing punctuation for cleaner answers
+                // remove trailing punctuation
                 $sentence = rtrim($sentence, '.!?');
                 $sentences[] = $sentence;
             }
         }
 
-        return array_slice($sentences, 0, 3); // Limit to 3 sentences per paragraph
+        return array_slice($sentences, 0, 3); // limit to 3 sentences per paragraph
     }
 
     /**
-     * Generate a question from a statement
+     * generate a question from a statement
      */
     private function generateQuestionFromStatement(string $statement): string
     {
         $statement = trim($statement);
         
-        // If it's already a question, return it as-is
+        // return as-is if already question
         if (str_ends_with($statement, '?')) {
             return $statement;
         }
 
-        // Try to extract key terms and create a question
-        // Remove common words and keep focus words
+        // extract key terms and create question
+        // keep focus words
         $words = str_word_count($statement, 1, '0-9-');
         
         if (count($words) > 0) {
-            // Find the main subject/verb structure
+            // find main subject/verb structure
             $firstWords = array_slice($words, 0, min(3, count($words)));
             $mainPhrase = implode(' ', $firstWords);
             
-            // Create a "What" or "How" question based on context
+            // create what/how question from context
             if (preg_match('/^(is|are|was|were|be|being|been)/i', $statement)) {
                 return 'What '.$statement.'?';
             } elseif (preg_match('/^(can|could|may|might|should|would|must|will)/i', $statement)) {
@@ -314,7 +314,7 @@ class FlashcardService
     }
 
     /**
-     * Create generic fallback cards
+     * create generic fallback cards
      */
     private function createGenericCards(string $notes): array
     {
@@ -335,7 +335,7 @@ class FlashcardService
     }
 
     /**
-     * Log usage action
+     * log usage action
      */
     public function logUsage(?User $user, string $action, array $metadata = []): void
     {
@@ -347,7 +347,7 @@ class FlashcardService
     }
 
     /**
-     * Save a flashcard set with flashcards
+     * save flashcard set with flashcards
      */
     public function saveFlashcardSet(User $user, string $title, array $flashcards, array $tagIds = []): FlashcardSet
     {
@@ -377,13 +377,13 @@ class FlashcardService
     }
 
     /**
-     * Update flashcard set
+     * update flashcard set
      */
     public function updateFlashcardSet(FlashcardSet $set, string $title, array $flashcards, array $tagIds = []): FlashcardSet
     {
         $set->update(['title' => $title]);
 
-        // Delete existing flashcards and recreate
+        // delete existing flashcards and recreate
         $set->flashcards()->delete();
 
         foreach ($flashcards as $card) {

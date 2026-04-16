@@ -12,10 +12,10 @@ Route::inertia('/', 'welcome', [
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
-    // Flashcard routes
+    // flashcard routes
     Route::inertia('flashcards/review', 'flashcards/review')->name('flashcards.review');
 
-    // Sets routes
+    // sets routes
     Route::inertia('sets', 'sets/index')->name('sets.index');
     Route::get('sets/{set}', [SetController::class, 'show'])->name('sets.show');
     Route::get('sets/{set}/practice', [SetController::class, 'practice'])->name('sets.practice');

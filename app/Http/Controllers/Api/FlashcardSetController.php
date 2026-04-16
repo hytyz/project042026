@@ -17,7 +17,7 @@ class FlashcardSetController extends Controller
     ) {}
 
     /**
-     * List all flashcard sets for the authenticated user
+     * list all flashcard sets for authenticated user
      */
     public function index(): JsonResponse
     {
@@ -33,7 +33,7 @@ class FlashcardSetController extends Controller
     }
 
     /**
-     * Store a new flashcard set
+     * store a new flashcard set
      */
     public function store(StoreFlashcardSetRequest $request): JsonResponse
     {
@@ -53,11 +53,11 @@ class FlashcardSetController extends Controller
     }
 
     /**
-     * Show a specific flashcard set
+     * show a specific flashcard set
      */
     public function show(FlashcardSet $set): JsonResponse
     {
-        // Check authorization
+        // check authorization
         if ($set->user_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
@@ -80,11 +80,11 @@ class FlashcardSetController extends Controller
     }
 
     /**
-     * Update a flashcard set
+     * update a flashcard set
      */
     public function update(UpdateFlashcardSetRequest $request, FlashcardSet $set): JsonResponse
     {
-        // Check authorization
+        // check authorization
         if ($set->user_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
@@ -108,11 +108,11 @@ class FlashcardSetController extends Controller
     }
 
     /**
-     * Delete a flashcard set
+     * delete a flashcard set
      */
     public function destroy(FlashcardSet $set): JsonResponse
     {
-        // Check authorization
+        // check authorization
         if ($set->user_id !== Auth::id()) {
             return response()->json([
                 'success' => false,

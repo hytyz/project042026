@@ -26,7 +26,7 @@ class FlashcardController extends Controller
             $validated['type']
         );
 
-        // Log the generation
+        // log generation
         $this->flashcardService->logUsage(
             Auth::user(),
             'generate',

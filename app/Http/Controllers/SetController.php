@@ -10,11 +10,11 @@ use Inertia\Response;
 class SetController extends Controller
 {
     /**
-     * Show the edit page for a flashcard set
+     * show the edit page for a flashcard set
      */
     public function show(FlashcardSet $set): Response
     {
-        // Check authorization
+        // check authorization
         if ($set->user_id !== Auth::id()) {
             abort(403);
         }
@@ -25,7 +25,7 @@ class SetController extends Controller
     }
 
     /**
-     * Show the practice page for a flashcard set
+     * show the practice page for a flashcard set
      */
     public function practice(FlashcardSet $set): Response
     {
