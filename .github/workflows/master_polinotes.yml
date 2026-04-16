@@ -105,5 +105,10 @@ jobs:
                 "name": "SESSION_SECURE_COOKIE",
                 "value": "true",
                 "slotSetting": false
+              },
+              {
+                "name": "SESSION_DOMAIN",
+                "value": "polinotes.azurewebsites.net",
+                "slotSetting": false
               }
             ]
